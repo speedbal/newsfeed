@@ -22,6 +22,8 @@ def _snowflake(value: object) -> int | None:
     if text.isdigit():
         return int(text)
     return None
+
+
 URL_RE = re.compile(r"https://[^\s<>()]+")
 DEAL_RE = re.compile(r"(?i)^deal:")
 
