@@ -28,7 +28,7 @@ from feedbuild.state import (
 )
 from feedbuild.urls import canonical_key
 from feedbuild.util import iso, safe_err
-from feedbuild.xsource import fetch_x
+from feedbuild.xsource import broadcast_avatars, fetch_x
 
 log = logging.getLogger("feed")
 
@@ -238,6 +238,7 @@ def main() -> int:
         extract_stats = _enrich(client, rss_items, state, cfg, now)
         x_items, x_report = fetch_x(client, cfg, state, now)
         x_items = merge_x(state.get("x_posts") or [], x_items, cutoff_iso)
+        broadcast_avatars(x_items)
 
     state["rss_items"] = [slim_item(item) for item in rss_items]
     state["x_posts"] = x_items

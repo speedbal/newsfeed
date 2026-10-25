@@ -125,13 +125,11 @@ def _html(text: str, images: list[dict], quote: dict | None, rewrites: dict[str,
         handle = quote.get("handle") or ""
         if handle:
             label = f"{label} (@{handle})" if label else f"@{handle}"
-        parts.append(
-            "<blockquote><p><strong>"
-            + html_lib.escape(label)
-            + "</strong></p>"
-            + _paragraphs(quote["text"], rewrites)
-            + "</blockquote>"
-        )
+        quote_html = "<blockquote>"
+        if label:
+            quote_html += "<p><strong>" + html_lib.escape(label) + "</strong></p>"
+        quote_html += _paragraphs(quote["text"], rewrites) + "</blockquote>"
+        parts.append(quote_html)
     for image in images:
         src = html_lib.escape(image["src"], quote=True)
         alt = html_lib.escape(image.get("alt") or "", quote=True)
@@ -142,6 +140,27 @@ def _html(text: str, images: list[dict], quote: dict | None, rewrites: dict[str,
             f'<figure><img src="{src}" alt="{alt}" loading="lazy" decoding="async"{dims}></figure>'
         )
     return "".join(parts)
+
+
+def _avatar(url: str, rewrites: dict[str, str]) -> str:
+    cleaned = clean_url(url or "", rewrites)
+    if not cleaned or is_tracker_url(cleaned):
+        return ""
+    return re.sub(r"_normal(\.[A-Za-z0-9]+)$", r"_400x400\1", cleaned)
+
+
+def broadcast_avatars(items: list[dict]) -> None:
+    """Copy a profile image onto older posts from the same handle."""
+    found: dict[str, str] = {}
+    for item in items:
+        handle = str(item.get("handle") or "").lower()
+        avatar = str(item.get("avatar") or "")
+        if handle and avatar:
+            found[handle] = avatar
+    for item in items:
+        handle = str(item.get("handle") or "").lower()
+        if handle and not item.get("avatar") and found.get(handle):
+            item["avatar"] = found[handle]
 
 
 def tweets_to_items(
@@ -228,6 +247,7 @@ def tweets_to_items(
                 "extra": "",
                 "also": [],
                 "handle": handle,
+                "avatar": _avatar(author.get("profile_image_url") or "", rewrites),
                 "needs_extract": False,
             }
         )
@@ -263,7 +283,7 @@ def _params(page_size: int, *, since_id: str = "", pagination: str = "", note_tw
         "tweet.fields": fields,
         "expansions": "author_id,attachments.media_keys,referenced_tweets.id",
         "media.fields": "url,preview_image_url,type,alt_text,width,height",
-        "user.fields": "username,name",
+        "user.fields": "username,name,profile_image_url",
     }
     if since_id:
         params["since_id"] = since_id

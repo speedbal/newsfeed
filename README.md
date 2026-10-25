@@ -4,7 +4,7 @@ A personal page for tech, AI, and crypto. It is static HTML, rebuilt every 15 mi
 
 After the first deploy the page is [https://speedbal.github.io/newsfeed/](https://speedbal.github.io/newsfeed/).
 
-Stories are newest first, for about the last three days. Tabs: All, Tech, AI, Crypto, and X. A card shows the source, age, and a three-line summary. Open it in place for the article text and images, or the full post on X. Read and unread state stays in this browser (`localStorage`). The same story from two feeds is shown once.
+Stories are newest first, for about the last three days. Tabs: All, Tech, AI, Crypto, and X. On a wide screen the list stays on the left and the story opens in a reader on the right. `J` and `K` move through the list. On a phone, a story opens in place. Posts from X are cards with the author, handle, and the full text. A post collapses only when it is long. Read and unread state stays in this browser (`localStorage`). The same story from two feeds is shown once.
 
 ## One-time GitHub settings
 

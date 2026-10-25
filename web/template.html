@@ -14,6 +14,7 @@
 </head>
 <body>
 <a class="skip" href="#list">Skip to stories</a>
+<a class="skip" href="#reader">Skip to reader</a>
 <div class="wrap">
 <header class="top">
 <div>
@@ -34,6 +35,8 @@
 <button type="button" data-filter="crypto" aria-selected="false">Crypto <span class="count" data-count="crypto"></span></button>
 <button type="button" data-filter="x" aria-selected="false">X <span class="count" data-count="x"></span></button>
 </nav>
+<div class="workspace">
+<div class="list-col">
 <main id="list">
 @@ITEMS@@
 <p id="empty" class="empty" hidden>Nothing in this tab from the last @@WINDOW@@ days.</p>
@@ -43,7 +46,18 @@
 <p><a href="https://github.com/speedbal/newsfeed" rel="noopener noreferrer">Sources and setup</a></p>
 </footer>
 </div>
-<noscript><p class="noscript">Filters and read state need the page's own script. Stories still open below.</p></noscript>
+<aside id="reader" class="reader" tabindex="-1" aria-label="Reader">
+<div id="reader-empty" class="reader-empty">
+<p class="reader-mark">Reader</p>
+<p>Select a story to read it here.</p>
+<p class="reader-keys"><kbd>J</kbd><kbd>K</kbd> move · <kbd>Esc</kbd> closes</p>
+</div>
+<div class="reader-bar"><button type="button" id="reader-close" hidden>Close</button></div>
+<div id="reader-stage" class="reader-stage" hidden></div>
+</aside>
+</div>
+</div>
+<noscript><p class="noscript">Filters, the reader, and read state need the page's own script. On a phone, stories still open below.</p></noscript>
 <script src="app.js" defer></script>
 </body>
 </html>
