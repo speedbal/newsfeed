@@ -11,12 +11,12 @@ from feedbuild.config import Rules, load_config
 from feedbuild.dedupe import cluster_rss
 from feedbuild.htmlclean import clean_html
 from feedbuild.httpfetch import Fetch, _looks_like_challenge, _parse_curl_headers
-from feedbuild.render import audit_page, write_site
+from feedbuild.render import audit_page, render_item, write_site
 from feedbuild.rss import is_sponsored, parse_feed_window
 from feedbuild.state import merge_rss
 from feedbuild.urls import clean_url, host_is_amazon, is_affiliate, is_tracker_url, unsafe_host
 from feedbuild.util import iso
-from feedbuild.xsource import drop_reason, tweets_to_items
+from feedbuild.xsource import broadcast_avatars, drop_reason, tweets_to_items
 
 
 def rules() -> Rules:
@@ -266,7 +266,12 @@ def test_x_posts() -> None:
             },
         ],
         "includes": {
-            "users": [{"id": "1", "username": "karpathy", "name": "Andrej"}],
+            "users": [{
+                "id": "1",
+                "username": "karpathy",
+                "name": "Andrej",
+                "profile_image_url": "https://pbs.twimg.com/profile_images/1/abc_normal.jpg",
+            }],
             "tweets": [{"id": "50", "author_id": "2", "text": "Original thought worth quoting"}],
             "media": [
                 {
@@ -296,9 +301,15 @@ def test_x_posts() -> None:
     assert "https://example.com/a?id=9" in note["html"]
     assert note["topics"] == ["ai"]
     assert note["title"] == "Andrej Karpathy"
+    assert note["avatar"] == "https://pbs.twimg.com/profile_images/1/abc_400x400.jpg"
     photo = next(item for item in items if item["id"] == "x:104")
+    assert "<strong></strong>" not in photo["html"]
     assert "pbs.twimg.com/media/x.jpg" in photo["html"]
     assert "Original thought" in photo["html"]
+    bare = {"id": "x:1", "kind": "x", "handle": "karpathy", "avatar": ""}
+    pictured = {"id": "x:2", "kind": "x", "handle": "karpathy", "avatar": note["avatar"]}
+    broadcast_avatars([bare, pictured])
+    assert bare["avatar"] == note["avatar"]
 
 
 def test_page_and_sources() -> None:
@@ -334,6 +345,59 @@ def test_page_and_sources() -> None:
     assert "The full text." in page
     assert 'data-topics="tech"' in page
     assert "app.js" in page
+    assert 'id="reader"' in page
+    long_text = "sentence " * 80
+    tweet = render_item(
+        {
+            "id": "x:100",
+            "kind": "x",
+            "title": "Andrej Karpathy",
+            "source": "@karpathy",
+            "handle": "karpathy",
+            "avatar": "https://pbs.twimg.com/profile_images/1/abc_400x400.jpg",
+            "topics": ["ai"],
+            "url": "https://x.com/karpathy/status/100",
+            "time": iso(now),
+            "summary": "this blurb must not be the card",
+            "html": f"<p>{long_text}</p>",
+            "comments_url": "",
+            "extra": "",
+            "also": [],
+        },
+        now,
+        {},
+    )
+    short = render_item(
+        {
+            "id": "x:101",
+            "kind": "x",
+            "title": "Andrej Karpathy",
+            "source": "@karpathy",
+            "handle": "karpathy",
+            "avatar": "",
+            "topics": ["ai"],
+            "url": "https://x.com/karpathy/status/101",
+            "time": iso(now),
+            "summary": "short blurb stays out of the card",
+            "html": "<p>A short post.</p>",
+            "comments_url": "",
+            "extra": "",
+            "also": [],
+        },
+        now,
+        {},
+    )
+    assert 'class="summary"' not in tweet
+    assert "this blurb must not be the card" not in tweet
+    assert "Show more" in tweet
+    assert "abc_400x400" in tweet
+    assert "@karpathy" in tweet
+    assert "Open on X" in tweet
+    assert "AK" not in tweet
+    assert "Show more" not in short
+    assert "short blurb stays out of the card" not in short
+    assert ">AK<" in short
+    assert "A short post." in short
 
 
 def test_curl_challenge() -> None:

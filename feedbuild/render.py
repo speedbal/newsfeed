@@ -14,8 +14,8 @@ from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 
 from feedbuild.config import ROOT
-from feedbuild.htmlclean import clean_html
-from feedbuild.urls import is_tracker_url
+from feedbuild.htmlclean import clean_html, to_text
+from feedbuild.urls import clean_url, is_tracker_url
 from feedbuild.util import parse_iso, relative
 
 WEB = ROOT / "web"
@@ -40,6 +40,29 @@ def _esc(value: object) -> str:
     return html.escape(str(value), quote=True)
 
 
+def _when(item: dict, now: datetime) -> str:
+    try:
+        return relative(parse_iso(item["time"]), now)
+    except (KeyError, ValueError):
+        return ""
+
+
+def _safe_handle(handle: str) -> str:
+    handle = (handle or "").strip().lstrip("@")
+    if re.fullmatch(r"[A-Za-z0-9_]{1,15}", handle):
+        return handle
+    return ""
+
+
+def _initials(name: str) -> str:
+    parts = [part for part in re.split(r"\s+", (name or "").strip()) if part]
+    if not parts:
+        return "X"
+    if len(parts) == 1:
+        return parts[0][:2].upper()
+    return (parts[0][0] + parts[-1][0]).upper()
+
+
 def kicker_for(item: dict) -> str:
     labels = [LABELS[topic] for topic in item.get("topics") or [] if topic in LABELS]
     if item.get("kind") == "x":
@@ -47,12 +70,70 @@ def kicker_for(item: dict) -> str:
     return labels[0] if labels else "News"
 
 
+def render_tweet(item: dict, now: datetime, rewrites: dict[str, str]) -> str:
+    handle = _safe_handle(str(item.get("handle") or ""))
+    if not handle:
+        source = str(item.get("source") or "")
+        if source.startswith("@"):
+            handle = _safe_handle(source[1:])
+    name = str(item.get("title") or handle or "Post")
+    profile = clean_url(f"https://x.com/{handle}", rewrites) if handle else ""
+    avatar = clean_url(str(item.get("avatar") or ""), rewrites)
+    if avatar and is_tracker_url(avatar):
+        avatar = ""
+    if avatar and profile:
+        avatar_html = (
+            f'<a class="avatar" href="{_esc(profile)}" rel="noopener noreferrer" target="_blank">'
+            f'<img src="{_esc(avatar)}" alt="" width="80" height="80"></a>'
+        )
+    elif profile:
+        avatar_html = (
+            f'<a class="avatar" href="{_esc(profile)}" rel="noopener noreferrer" target="_blank">'
+            f"{_esc(_initials(name))}</a>"
+        )
+    else:
+        avatar_html = f'<span class="avatar">{_esc(_initials(name))}</span>'
+    if profile:
+        name_html = (
+            f'<a class="tweet-name" href="{_esc(profile)}" rel="noopener noreferrer" target="_blank">'
+            f"{_esc(name)}</a>"
+        )
+        handle_html = (
+            f'<a class="tweet-handle" href="{_esc(profile)}" rel="noopener noreferrer" target="_blank">'
+            f"@{_esc(handle)}</a>"
+        )
+    else:
+        name_html = f'<span class="tweet-name">{_esc(name)}</span>'
+        handle_html = ""
+    body = clean_html(item.get("html") or "", item.get("url") or "", rewrites)
+    chars = len(to_text(body))
+    more = '<button type="button" class="more" hidden>Show more</button>' if chars > 400 else ""
+    post_url = clean_url(str(item.get("url") or ""), rewrites)
+    link = (
+        f'<p class="tweet-links"><a href="{_esc(post_url)}" rel="noopener noreferrer" target="_blank">Open on X</a></p>'
+        if post_url
+        else ""
+    )
+    topics = " ".join(topic for topic in item.get("topics") or [] if topic in LABELS)
+    return (
+        f'<article class="item item-x" data-id="{_esc(item.get("id"))}" data-kind="x" '
+        f'data-topics="{_esc(topics)}" data-chars="{chars}">'
+        f'<div class="tweet">{avatar_html}<div class="tweet-main">'
+        '<div class="tweet-head">'
+        '<span class="unread-dot" aria-hidden="true"></span>'
+        f"{name_html}{handle_html}"
+        f'<time datetime="{_esc(item.get("time") or "")}">{_esc(_when(item, now))}</time>'
+        "</div>"
+        f'<div class="tweet-text"><div class="tweet-body">{body}</div></div>'
+        f"{more}{link}"
+        "</div></div></article>"
+    )
+
+
 def render_item(item: dict, now: datetime, rewrites: dict[str, str]) -> str:
-    try:
-        when = parse_iso(item["time"])
-        label = relative(when, now)
-    except (KeyError, ValueError):
-        label = ""
+    if item.get("kind") == "x":
+        return render_tweet(item, now, rewrites)
+    label = _when(item, now)
     bits = [item.get("source") or ""]
     if item.get("extra"):
         bits.append(item["extra"])
