@@ -1,0 +1,105 @@
+name: Build feed
+
+on:
+  schedule:
+    # UTC. GitHub may start the run a few minutes late.
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "sources.json"
+      - "feedbuild/**"
+      - "web/**"
+      - "requirements.txt"
+      - "scripts/**"
+      - ".github/workflows/build.yml"
+
+# One build at a time so two runs cannot clobber feed-state.
+concurrency:
+  group: newsfeed
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+  id-token: write
+  pages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Restore feed state
+        run: |
+          set -euo pipefail
+          mkdir -p .state
+          if git fetch origin feed-state --depth=1; then
+            git checkout origin/feed-state -- .state
+            git reset -q HEAD -- .state || true
+            echo "restored feed state"
+          else
+            echo "no feed-state branch yet"
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check feed logic
+        run: python -m feedbuild.selftest
+
+      - name: Build site
+        env:
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          X_LIST_ID: ${{ vars.X_LIST_ID }}
+          PYTHONUNBUFFERED: "1"
+        run: python -m feedbuild
+
+      - name: Publish feed state
+        id: state
+        continue-on-error: true
+        run: bash scripts/publish_state.sh
+
+      - name: Note if state was not saved
+        if: steps.state.outcome == 'failure'
+        run: |
+          echo "### Feed state was not saved" >> "$GITHUB_STEP_SUMMARY"
+          echo "Workflow permissions need Read and write so the feed-state branch can be updated. The site can still deploy. X may repeat the newest page next run." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep scheduled workflows alive
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        continue-on-error: true
+        run: bash scripts/keepalive.sh
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
