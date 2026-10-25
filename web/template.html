@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#f6f3ec">
+<meta http-equiv="Content-Security-Policy" content="@@CSP@@">
+<title>Feed</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c1915'/%3E%3Ccircle cx='16' cy='16' r='5.5' fill='%23c45c26'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+<script>@@THEME_SCRIPT@@</script>
+</head>
+<body>
+<a class="skip" href="#list">Skip to stories</a>
+<div class="wrap">
+<header class="top">
+<div>
+<p class="mark">Personal</p>
+<h1>Feed</h1>
+<p class="tagline">Tech, AI, and crypto. No ads, no trackers.</p>
+<p class="built">Updated <time id="built" datetime="@@BUILT_ISO@@">@@BUILT_REL@@</time></p>
+</div>
+<div class="tools">
+<button type="button" id="mark-read">Mark all read</button>
+<button type="button" id="theme" aria-label="Switch to dark mode">Dark</button>
+</div>
+</header>
+<nav class="tabs" aria-label="Sections">
+<button type="button" data-filter="all" aria-selected="true">All <span class="count" data-count="all"></span></button>
+<button type="button" data-filter="tech" aria-selected="false">Tech <span class="count" data-count="tech"></span></button>
+<button type="button" data-filter="ai" aria-selected="false">AI <span class="count" data-count="ai"></span></button>
+<button type="button" data-filter="crypto" aria-selected="false">Crypto <span class="count" data-count="crypto"></span></button>
+<button type="button" data-filter="x" aria-selected="false">X <span class="count" data-count="x"></span></button>
+</nav>
+<main id="list">
+@@ITEMS@@
+<p id="empty" class="empty" hidden>Nothing in this tab from the last @@WINDOW@@ days.</p>
+</main>
+<footer>
+<p>@@COUNT@@ stories from the last @@WINDOW@@ days. Read state stays in this browser.</p>
+<p><a href="https://github.com/speedbal/newsfeed" rel="noopener noreferrer">Sources and setup</a></p>
+</footer>
+</div>
+<noscript><p class="noscript">Filters and read state need the page's own script. Stories still open below.</p></noscript>
+<script src="app.js" defer></script>
+</body>
+</html>

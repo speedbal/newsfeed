@@ -1,0 +1,871 @@
+{
+  "_comment": "Add or remove objects in rss_feeds and x_accounts. Topics decide which tabs an X post appears in (tech, ai, crypto). The X tab always shows posts. x_list_id is the private list of these accounts; set the X_LIST_ID Actions variable to override it.",
+  "window_days": 3,
+  "x_list_id": "2114366436562928021",
+  "limits": {
+    "max_extract_per_run": 160,
+    "x_max_requests": 2,
+    "x_max_requests_cold": 5,
+    "x_page_size": 100,
+    "max_items": 500,
+    "per_feed_cap": 60
+  },
+  "aggregators": [
+    "Hacker News",
+    "Lobsters",
+    "Techmeme"
+  ],
+  "drop_tags": [
+    "sponsored",
+    "Sponsored",
+    "Partner Content",
+    "Press Release",
+    "Deals",
+    "Verge Shopping",
+    "Shopping"
+  ],
+  "drop_path_segments": [
+    "sponsored",
+    "sponsored-content",
+    "partner-content",
+    "advertorial",
+    "paid-content"
+  ],
+  "deals_hosts": [
+    "theverge.com"
+  ],
+  "deals_path_segments": [
+    "deals",
+    "shopping"
+  ],
+  "never_extract_hosts": [
+    "openai.com",
+    "theblock.co",
+    "blockworks.com",
+    "x.com",
+    "twitter.com",
+    "youtube.com",
+    "youtu.be"
+  ],
+  "host_rewrites": {
+    "vitalik.ca": "vitalik.eth.limo",
+    "www.vitalik.ca": "vitalik.eth.limo"
+  },
+  "x_accounts": [
+    {
+      "handle": "karpathy",
+      "id": "33836629",
+      "name": "Andrej Karpathy",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "addyosmani",
+      "id": "35432643",
+      "name": "Addy Osmani",
+      "category": "tech_ai",
+      "topics": [
+        "tech",
+        "ai"
+      ]
+    },
+    {
+      "handle": "rauchg",
+      "id": "15540222",
+      "name": "Guillermo Rauch",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "dhh",
+      "id": "14561327",
+      "name": "DHH",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "mitchellh",
+      "id": "12819682",
+      "name": "Mitchell Hashimoto",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "NousResearch",
+      "id": "1318419526132862976",
+      "name": "Nous Research",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "WesRoth",
+      "id": "1547403906954563585",
+      "name": "Wes Roth",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "elonmusk",
+      "id": "44196397",
+      "name": "Elon Musk",
+      "category": "tech_ai",
+      "topics": [
+        "tech",
+        "ai"
+      ]
+    },
+    {
+      "handle": "Tesla",
+      "id": "13298072",
+      "name": "Tesla",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "SpaceX",
+      "id": "34743251",
+      "name": "SpaceX",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "TechCrunch",
+      "id": "816653",
+      "name": "TechCrunch",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "MKBHD",
+      "id": "29873662",
+      "name": "Marques Brownlee",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "Mrwhosetheboss",
+      "id": "3363946175",
+      "name": "Arun Maini",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "LinusTech",
+      "id": "403614288",
+      "name": "Linus Tech Tips",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "tldtoday",
+      "id": "126124275",
+      "name": "Jonathan Morrison 🙋🏻‍♂️",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "TakiUdon_",
+      "id": "1696760727074381824",
+      "name": "Taki Udon",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "josefprusa",
+      "id": "14443044",
+      "name": "Josef Prusa",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "Prusa3D",
+      "id": "957913144617259009",
+      "name": "Prusa3D",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "WatcherGuru",
+      "id": "1387497871751196672",
+      "name": "Watcher.Guru",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "DeItaone",
+      "id": "2704294333",
+      "name": "*Walter Bloomberg",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "whale_alert",
+      "id": "1039833297751302144",
+      "name": "Whale Alert",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "zachxbt",
+      "id": "3012852462",
+      "name": "ZachXBT",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "glassnode",
+      "id": "1022821051187822593",
+      "name": "glassnode",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "cryptoquant_com",
+      "id": "1136819035163619328",
+      "name": "CryptoQuant.com",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "Dune",
+      "id": "1039449274344529920",
+      "name": "Dune",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "willywoo",
+      "id": "13418472",
+      "name": "Willy Woo",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "cobie",
+      "id": "2259434528",
+      "name": "Cobie",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "saylor",
+      "id": "244647486",
+      "name": "Michael Saylor",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "KeetaNetwork",
+      "id": "1511407288354889730",
+      "name": "Keeta",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "schenkty",
+      "id": "1072720633",
+      "name": "Ty",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "yourpal",
+      "id": "13506842",
+      "name": "Roy Keene",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "jessepollak",
+      "id": "18876842",
+      "name": "jesse.base.eth",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "bgarlinghouse",
+      "id": "28582680",
+      "name": "Brad Garlinghouse",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "cz_binance",
+      "id": "902926941413453824",
+      "name": "CZ 🔶 BNB",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "michaeljburry",
+      "id": "412833880",
+      "name": "Cassandra Unchained",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "RaoulGMI",
+      "id": "2453385626",
+      "name": "Raoul Pal",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "caprioleio",
+      "id": "965907870867861504",
+      "name": "Charles Edwards",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "benjamincowen",
+      "id": "943506806931734528",
+      "name": "Benjamin Cowen",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "100trillionUSD",
+      "id": "918804624303382528",
+      "name": "PlanB",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "hash_dive",
+      "id": "1552319500841848833",
+      "name": "Hashdive",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "Polysights",
+      "id": "1850332333859049472",
+      "name": "Polysights",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "simonw",
+      "id": "12497",
+      "name": "Simon Willison",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "emollick",
+      "id": "39125788",
+      "name": "Ethan Mollick",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "AnthropicAI",
+      "id": "1353836358901501952",
+      "name": "Anthropic",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "OpenAI",
+      "id": "4398626122",
+      "name": "OpenAI",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "GoogleDeepMind",
+      "id": "4783690002",
+      "name": "Google DeepMind",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "huggingface",
+      "id": "778764142412984320",
+      "name": "Hugging Face",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "swyx",
+      "id": "33521530",
+      "name": "swyx",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "ylecun",
+      "id": "48008938",
+      "name": "Yann LeCun",
+      "category": "tech_ai",
+      "topics": [
+        "ai"
+      ]
+    },
+    {
+      "handle": "Techmeme",
+      "id": "817386",
+      "name": "Techmeme",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "arstechnica",
+      "id": "717313",
+      "name": "Ars Technica",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "verge",
+      "id": "275686563",
+      "name": "The Verge",
+      "category": "tech_ai",
+      "topics": [
+        "tech"
+      ]
+    },
+    {
+      "handle": "CoinDesk",
+      "id": "1333467482",
+      "name": "CoinDesk",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "TheBlockCo",
+      "id": "963767159536209921",
+      "name": "The Block",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "DecryptMedia",
+      "id": "993530753014054912",
+      "name": "Decrypt",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "tier10k",
+      "id": "2361601055",
+      "name": "db (DB News)",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "lookonchain",
+      "id": "1462727797135216641",
+      "name": "Lookonchain",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "VitalikButerin",
+      "id": "295218901",
+      "name": "vitalik.eth",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    },
+    {
+      "handle": "PolymarketIntel",
+      "id": "1495480590572961792",
+      "name": "Polymarket Intel",
+      "category": "crypto",
+      "topics": [
+        "crypto"
+      ]
+    }
+  ],
+  "rss_feeds": [
+    {
+      "name": "Ars Technica",
+      "url": "https://feeds.arstechnica.com/arstechnica/index",
+      "category": "tech",
+      "full_text": "partial",
+      "extract": true,
+      "notes": "content:encoded holds ~1k-char lede, not full article; pages extract cleanly; very few deals posts"
+    },
+    {
+      "name": "The Verge",
+      "url": "https://www.theverge.com/rss/index.xml",
+      "category": "tech",
+      "full_text": "partial",
+      "extract": true,
+      "notes": "Only 10 items; drop entries tagged \"Deals\"/\"Verge Shopping\" (affiliate)"
+    },
+    {
+      "name": "Hacker News",
+      "url": "https://hnrss.org/frontpage?points=100",
+      "category": "tech",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Hacker News front page (hnrss, >=100 pts). Summary = link + points/comments; linked sites vary (X links extract poorly)"
+    },
+    {
+      "name": "TechCrunch",
+      "url": "https://techcrunch.com/feed/",
+      "category": "tech",
+      "full_text": false,
+      "extract": true,
+      "notes": "~150-char excerpt; full article extracts cleanly"
+    },
+    {
+      "name": "MIT Technology Review",
+      "url": "https://www.technologyreview.com/feed/",
+      "category": "tech",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full text in feed BUT runs sponsored posts: drop entries with tag \"sponsored\" (4 of 10 at check time)"
+    },
+    {
+      "name": "Techmeme",
+      "url": "https://www.techmeme.com/feed.xml",
+      "category": "tech",
+      "full_text": false,
+      "extract": false,
+      "notes": "Curated headline + ~300-char blurb linking to original publisher; use summary, follow source link"
+    },
+    {
+      "name": "404 Media",
+      "url": "https://www.404media.co/rss/",
+      "category": "tech",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full text for free posts; independent, reader-funded"
+    },
+    {
+      "name": "The Register",
+      "url": "https://www.theregister.com/headlines.atom",
+      "category": "tech",
+      "full_text": "partial",
+      "extract": true,
+      "notes": "50 items; extraction picks up some sidebar noise; occasional vendor-sponsored \"Partner Content\""
+    },
+    {
+      "name": "Platformer",
+      "url": "https://www.platformer.news/rss/",
+      "category": "tech",
+      "full_text": false,
+      "extract": true,
+      "notes": "Short teaser; some posts paywalled after intro"
+    },
+    {
+      "name": "Lobsters",
+      "url": "https://lobste.rs/rss",
+      "category": "tech",
+      "full_text": false,
+      "extract": true,
+      "notes": "Title + link only; links are high-signal dev/tech posts"
+    },
+    {
+      "name": "Simon Willison",
+      "url": "https://simonwillison.net/atom/everything/",
+      "category": "ai",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full posts in feed; no ads"
+    },
+    {
+      "name": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "category": "ai",
+      "full_text": false,
+      "extract": false,
+      "notes": "Short description; openai.com article pages return 403 (Cloudflare) to scripts"
+    },
+    {
+      "name": "Anthropic News",
+      "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml",
+      "category": "ai",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Anthropic News (community mirror). No official RSS (anthropic.com/rss.xml is 404); unofficial GitHub-scraped mirror, may lag; pages extract cleanly"
+    },
+    {
+      "name": "Google DeepMind",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "category": "ai",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Google DeepMind Blog. One-sentence description; pages extract cleanly"
+    },
+    {
+      "name": "Google AI",
+      "url": "https://blog.google/technology/ai/rss/",
+      "category": "ai",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Google AI (The Keyword). Corporate product blog; promotional tone; pages extract cleanly"
+    },
+    {
+      "name": "Hugging Face",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "category": "ai",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Hugging Face Blog. Title + link only (890 items, filter by date); pages extract cleanly"
+    },
+    {
+      "name": "Import AI",
+      "url": "https://importai.substack.com/feed",
+      "category": "ai",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as Import AI (Jack Clark). Full newsletter in feed; weekly"
+    },
+    {
+      "name": "Interconnects",
+      "url": "https://www.interconnects.ai/feed",
+      "category": "ai",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as Interconnects (Nathan Lambert). Full text; some posts are podcasts/paid"
+    },
+    {
+      "name": "One Useful Thing",
+      "url": "https://www.oneusefulthing.org/feed",
+      "category": "ai",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as One Useful Thing (Ethan Mollick). Full text"
+    },
+    {
+      "name": "Latent Space",
+      "url": "https://www.latent.space/feed",
+      "category": "ai",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as Latent Space / AINews. Full text, very long daily AINews digests; may contain sponsor blurbs and event promos - consider filtering"
+    },
+    {
+      "name": "Andrej Karpathy",
+      "url": "https://karpathy.bearblog.dev/feed/",
+      "category": "ai",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as Andrej Karpathy blog. Full text; infrequent posts"
+    },
+    {
+      "name": "CoinDesk",
+      "url": "https://www.coindesk.com/arc/outboundfeeds/rss/",
+      "category": "crypto",
+      "full_text": false,
+      "extract": true,
+      "notes": "Feed gives title/link/tags only (empty description); pages extract cleanly"
+    },
+    {
+      "name": "The Block",
+      "url": "https://www.theblock.co/rss.xml",
+      "category": "crypto",
+      "full_text": false,
+      "extract": false,
+      "notes": "~120-char summary; article pages behind Cloudflare challenge (403) for scripts; use summaries"
+    },
+    {
+      "name": "Decrypt",
+      "url": "https://decrypt.co/feed",
+      "category": "crypto",
+      "full_text": false,
+      "extract": true,
+      "notes": "~150-char excerpt; pages extract cleanly; filter any \"Sponsored\"/\"Press Release\" categories"
+    },
+    {
+      "name": "Blockworks",
+      "url": "https://blockworks.com/feed",
+      "category": "crypto",
+      "full_text": false,
+      "extract": false,
+      "notes": "Short summary; article pages blocked by JS/cookie challenge (403); blockworks.co/feed also works"
+    },
+    {
+      "name": "DL News",
+      "url": "https://www.dlnews.com/arc/outboundfeeds/rss/",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full article text in content:encoded"
+    },
+    {
+      "name": "Protos",
+      "url": "https://protos.com/feed/",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full text; investigative, critical coverage"
+    },
+    {
+      "name": "Unchained",
+      "url": "https://unchainedcrypto.com/feed/",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full text"
+    },
+    {
+      "name": "Bitcoin Magazine",
+      "url": "https://bitcoinmagazine.com/feed",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Full text; owned by BTC Inc (Bitcoin Conference) - occasional self-promotion"
+    },
+    {
+      "name": "Web3 is Going Great",
+      "url": "https://www.web3isgoinggreat.com/feed.xml",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as Web3 is Going Great (Molly White). Full entries in feed; scams/hacks tracker"
+    },
+    {
+      "name": "Citation Needed",
+      "url": "https://www.citationneeded.news/rss/",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as Citation Needed (Molly White). Full newsletter text in feed"
+    },
+    {
+      "name": "Vitalik Buterin",
+      "url": "https://vitalik.eth.limo/feed.xml",
+      "category": "crypto",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Vitalik Buterin blog. Title + link only; long essays extract cleanly (links in feed use vitalik.ca - rewrite to vitalik.eth.limo)"
+    },
+    {
+      "name": "Ethereum Foundation",
+      "url": "https://blog.ethereum.org/feed.xml",
+      "category": "crypto",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Ethereum Foundation Blog. Description ~300 chars; 644 items (filter by date)"
+    },
+    {
+      "name": "Chainalysis",
+      "url": "https://www.chainalysis.com/feed/",
+      "category": "crypto",
+      "full_text": false,
+      "extract": true,
+      "notes": "Listed as Chainalysis Blog. Research/sanctions/crime reports; company blog with some product marketing"
+    },
+    {
+      "name": "Polymarket",
+      "url": "https://news.polymarket.com/feed",
+      "category": "crypto",
+      "full_text": true,
+      "extract": true,
+      "notes": "Listed as The Oracle by Polymarket. Polymarket-owned newsletter on prediction-market moves; analytical but promotes Polymarket"
+    }
+  ]
+}
