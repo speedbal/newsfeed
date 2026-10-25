@@ -84,7 +84,7 @@ Entries tagged Sponsored, Partner Content, Press Release, Deals, Verge Shopping,
 
 Seen RSS items, X posts, the list cursor, and extracted articles live on the `feed-state` branch. Each run force-pushes **one** commit there, so `main` does not get a commit every 15 minutes. Do not make `feed-state` the default branch. Article text is cached by URL and dropped outside the rolling window.
 
-One broken feed is logged and skipped. The Actions job summary lists failures.
+One broken feed is logged and skipped. A story that cannot be shown safely, including one whose text contains `@@`, is skipped the same way. An X or extract error keeps the stories already saved and still publishes the page. The Actions job summary lists failures.
 
 ## Local build
 

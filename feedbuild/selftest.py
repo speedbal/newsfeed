@@ -11,7 +11,7 @@ from feedbuild.config import Rules, load_config
 from feedbuild.dedupe import cluster_rss
 from feedbuild.htmlclean import clean_html
 from feedbuild.httpfetch import Fetch, _looks_like_challenge, _parse_curl_headers
-from feedbuild.render import audit_page, render_item, write_site
+from feedbuild.render import audit_fragment, audit_page, render_item, write_site
 from feedbuild.rss import is_sponsored, parse_feed_window
 from feedbuild.state import merge_rss
 from feedbuild.urls import clean_url, host_is_amazon, is_affiliate, is_tracker_url, unsafe_host
@@ -331,9 +331,28 @@ def test_page_and_sources() -> None:
         "extra": "",
         "also": [],
     }
+    marked = dict(item)
+    marked.update(
+        {
+            "id": "s:at",
+            "title": "Why @@ is not a token",
+            "html": "<p>See @@ in the prose.</p>",
+            "url": "https://example.com/at?id=1",
+        }
+    )
+    poisoned = dict(item)
+    poisoned.update(
+        {
+            "id": "s:bad",
+            "title": "Do not publish this",
+            "html": "<p>ok</p>",
+            "url": "https://www.google-analytics.com/collect",
+        }
+    )
+    assert audit_fragment("<p>ok</p><iframe src='https://evil.test/ad'></iframe>")
     with tempfile.TemporaryDirectory() as tmp:
         path = write_site(
-            [item],
+            [item, marked, poisoned],
             now=now,
             window_days=3,
             rewrites={},
@@ -343,6 +362,10 @@ def test_page_and_sources() -> None:
     audit_page(page)
     assert "<iframe" not in page.lower()
     assert "The full text." in page
+    assert "Why &#64;&#64; is not a token" in page
+    assert "See &#64;&#64; in the prose." in page
+    assert "@@" not in page
+    assert "Do not publish this" not in page
     assert 'data-topics="tech"' in page
     assert "app.js" in page
     assert 'id="reader"' in page

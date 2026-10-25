@@ -15,6 +15,13 @@ from feedbuild.urls import clean_url, host_of, is_affiliate, is_tracker_url
 from feedbuild.util import iso, parse_iso, safe_err
 
 API = "https://api.x.com/2/lists/{list_id}/tweets"
+
+
+def _snowflake(value: object) -> int | None:
+    text = str(value or "")
+    if text.isdigit():
+        return int(text)
+    return None
 URL_RE = re.compile(r"https://[^\s<>()]+")
 DEAL_RE = re.compile(r"(?i)^deal:")
 
@@ -365,22 +372,36 @@ def fetch_x(client: httpx.Client, cfg: Config, state: dict, now: datetime) -> tu
             break
 
         first_ok = True if page == 0 else first_ok
-        items, ids, oldest = tweets_to_items(
-            payload,
-            accounts,
-            cfg.rules.host_rewrites,
-            now=now,
-            cutoff=cutoff,
-        )
+        try:
+            items, ids, oldest = tweets_to_items(
+                payload,
+                accounts,
+                cfg.rules.host_rewrites,
+                now=now,
+                cutoff=cutoff,
+            )
+        except Exception as exc:
+            report["status"] = "error"
+            report["error"] = safe_err(exc)
+            break
         raw_ids.extend(ids)
-        if since and any(int(item_id) <= int(previous) for item_id in ids):
+        prev_n = _snowflake(previous)
+
+        def _is_new(item: dict) -> bool:
+            if prev_n is None:
+                return True
+            return (_snowflake(str(item.get("id") or "").split(":", 1)[-1]) or -1) > prev_n
+
+        if since and prev_n is not None and any(
+            (_snowflake(item_id) or 0) <= prev_n for item_id in ids
+        ):
             saw_old = True
             state["x_since_id_supported"] = False
-            items = [item for item in items if int(item["id"].split(":", 1)[1]) > int(previous)]
+            items = [item for item in items if _is_new(item)]
         elif since:
             state["x_since_id_supported"] = True
         if previous and state.get("x_since_id_supported") is False:
-            items = [item for item in items if int(item["id"].split(":", 1)[1]) > int(previous)]
+            items = [item for item in items if _is_new(item)]
         collected.extend(items)
         pagination = str((payload.get("meta") or {}).get("next_token") or "")
         if not ids or not pagination or saw_old or state.get("x_since_id_supported") is False:

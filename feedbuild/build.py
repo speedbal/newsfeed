@@ -235,8 +235,23 @@ def main() -> int:
 
         names = {feed["name"] for feed in cfg.rss_feeds}
         rss_items = merge_rss(state.get("rss_items") or [], fresh, names, cutoff_iso)
-        extract_stats = _enrich(client, rss_items, state, cfg, now)
-        x_items, x_report = fetch_x(client, cfg, state, now)
+        try:
+            extract_stats = _enrich(client, rss_items, state, cfg, now)
+        except Exception as exc:
+            log.error("extract failed: %s", safe_err(exc))
+            extract_stats = {"attempted": 0, "ok": 0, "empty": 0, "error": 1, "cached": 0}
+        try:
+            x_items, x_report = fetch_x(client, cfg, state, now)
+        except Exception as exc:
+            log.error("X fetch failed: %s", safe_err(exc))
+            x_items = []
+            x_report = {
+                "status": "error",
+                "requests": 0,
+                "new": 0,
+                "error": safe_err(exc),
+                "since_id": state.get("x_since_id") or "",
+            }
         x_items = merge_x(state.get("x_posts") or [], x_items, cutoff_iso)
         broadcast_avatars(x_items)
 
@@ -246,7 +261,11 @@ def main() -> int:
     state["saved_at"] = iso(now)
     save_state(state)
 
-    clustered = cluster_rss(rss_items, cfg.rules.aggregators, cfg.rules.host_rewrites)
+    try:
+        clustered = cluster_rss(rss_items, cfg.rules.aggregators, cfg.rules.host_rewrites)
+    except Exception as exc:
+        log.error("dedupe failed: %s", safe_err(exc))
+        clustered = list(rss_items)
     for post in x_items:
         post.setdefault("also", [])
     display = clustered + x_items
