@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import html
+import logging
 import re
 import shutil
 from datetime import datetime
@@ -17,6 +18,8 @@ from feedbuild.config import ROOT
 from feedbuild.htmlclean import clean_html, to_text
 from feedbuild.urls import clean_url, is_tracker_url
 from feedbuild.util import parse_iso, relative
+
+log = logging.getLogger("feed")
 
 WEB = ROOT / "web"
 DIST = ROOT / "dist"
@@ -145,12 +148,16 @@ def render_item(item: dict, now: datetime, rewrites: dict[str, str]) -> str:
     if not body and summary:
         body = f"<p>{_esc(summary)}</p>"
     original = "View on X" if item.get("kind") == "x" else "Read original"
-    links = [
-        f'<a href="{_esc(item.get("url") or "")}" rel="noopener noreferrer" target="_blank">{original}</a>'
-    ]
-    if item.get("comments_url"):
+    links = []
+    story_url = clean_url(str(item.get("url") or ""), rewrites)
+    if story_url:
         links.append(
-            f'<a href="{_esc(item["comments_url"])}" rel="noopener noreferrer" target="_blank">Comments</a>'
+            f'<a href="{_esc(story_url)}" rel="noopener noreferrer" target="_blank">{original}</a>'
+        )
+    comments_url = clean_url(str(item.get("comments_url") or ""), rewrites)
+    if comments_url:
+        links.append(
+            f'<a href="{_esc(comments_url)}" rel="noopener noreferrer" target="_blank">Comments</a>'
         )
     topics = " ".join(topic for topic in item.get("topics") or [] if topic in LABELS)
     return (
@@ -188,6 +195,36 @@ def _csp() -> str:
     )
 
 
+def _bad_href(href: str, *, data_icon: bool) -> str:
+    lowered = href.lower()
+    if lowered.startswith(("javascript:", "file:")):
+        return f"bad link {href}"
+    if lowered.startswith("data:") and not data_icon:
+        return f"bad link {href}"
+    if is_tracker_url(href):
+        return f"tracker link {href}"
+    query = urlsplit(href).query.lower()
+    if "utm_" in query or "fbclid=" in query or "gclid=" in query:
+        return f"tracking param in {href}"
+    return ""
+
+
+def audit_fragment(fragment: str) -> str:
+    """Return why this story HTML must not be embedded, or "" if it is safe."""
+    soup = BeautifulSoup(f"<div id='audit'>{fragment}</div>", "lxml")
+    root = soup.find(id="audit") or soup
+    for tag in root.find_all(["iframe", "object", "embed", "frame", "script"]):
+        return f"contains <{tag.name}>"
+    for tag in root.find_all(href=True):
+        reason = _bad_href(tag["href"], data_icon=False)
+        if reason:
+            return reason
+    for tag in root.find_all(src=True):
+        if is_tracker_url(tag["src"]):
+            return f"tracker image {tag['src']}"
+    return ""
+
+
 def audit_page(page: str) -> None:
     soup = BeautifulSoup(page, "lxml")
     for tag in soup.find_all(["iframe", "object", "embed", "frame"]):
@@ -202,19 +239,10 @@ def audit_page(page: str) -> None:
         if not src and "newsfeed-theme" not in (script.string or ""):
             raise AuditError("unexpected inline script")
     for tag in soup.find_all(href=True):
-        href = tag["href"]
-        lowered = href.lower()
-        if lowered.startswith(("javascript:", "file:")):
-            raise AuditError(f"bad link {href}")
-        if lowered.startswith("data:") and not (
-            tag.name == "link" and "icon" in " ".join(tag.get("rel") or [])
-        ):
-            raise AuditError(f"bad link {href}")
-        if is_tracker_url(href):
-            raise AuditError(f"tracker link {href}")
-        query = urlsplit(href).query.lower()
-        if "utm_" in query or "fbclid=" in query or "gclid=" in query:
-            raise AuditError(f"tracking param in {href}")
+        data_icon = tag.name == "link" and "icon" in " ".join(tag.get("rel") or [])
+        reason = _bad_href(tag["href"], data_icon=data_icon)
+        if reason:
+            raise AuditError(reason)
     for tag in soup.find_all(src=True):
         if tag.name == "script":
             continue
@@ -234,9 +262,19 @@ def write_site(
 ) -> Path:
     pieces = []
     for item in items:
-        rendered = render_item(item, now, rewrites)
-        if "@@" in rendered:
-            raise AuditError("item HTML collided with a template token")
+        item_id = str(item.get("id") or "")
+        try:
+            rendered = render_item(item, now, rewrites)
+        except Exception as exc:
+            log.info("SKIP %s: %s", item_id or "?", exc)
+            continue
+        # Template tokens are @@NAME@@. A story that mentions @@ must not be able to
+        # rewrite the page, and must not fail the build.
+        rendered = rendered.replace("@@", "&#64;&#64;")
+        reason = audit_fragment(rendered)
+        if reason:
+            log.info("SKIP %s: %s", item_id or "?", reason)
+            continue
         pieces.append(rendered)
     if pieces:
         items_html = "\n".join(pieces)
