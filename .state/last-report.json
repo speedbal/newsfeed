@@ -1,0 +1,195 @@
+{
+  "built": "2026-10-31T14:55:46Z",
+  "feeds": [
+    {
+      "name": "404 Media",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Andrej Karpathy",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Anthropic News",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Ars Technica",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Bitcoin Magazine",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Blockworks",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Chainalysis",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Citation Needed",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "CoinDesk",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "DL News",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Decrypt",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Ethereum Foundation",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Google AI",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Google DeepMind",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Hacker News",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Hugging Face",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Import AI",
+      "status": "error",
+      "error": "HTTP 403"
+    },
+    {
+      "name": "Interconnects",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Latent Space",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Lobsters",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "MIT Technology Review",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "One Useful Thing",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "OpenAI News",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Platformer",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Polymarket",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Protos",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Simon Willison",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "TechCrunch",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Techmeme",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "The Block",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "The Register",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "The Verge",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Unchained",
+      "status": "ok",
+      "error": ""
+    },
+    {
+      "name": "Vitalik Buterin",
+      "status": "not_modified",
+      "error": ""
+    },
+    {
+      "name": "Web3 is Going Great",
+      "status": "ok",
+      "error": ""
+    }
+  ],
+  "extract": {
+    "attempted": 80,
+    "ok": 14,
+    "empty": 0,
+    "error": 66,
+    "cached": 657
+  },
+  "x": {
+    "status": "ok",
+    "requests": 1,
+    "new": 54,
+    "error": "",
+    "since_id": "2116544052267205093"
+  },
+  "displayed": 500
+}
